@@ -1,9 +1,11 @@
-package api;
+package api.tests;
 
 import api.dto.*;
 import api.services.ApiService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Story;
 import org.junit.jupiter.api.*;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -16,6 +18,8 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Epic("User api tests")
+@DisplayName("Test user api")
 class ApiTests {
     private static ApiService apiService;
     private final static String URL = "https://reqres.in/";
@@ -32,6 +36,7 @@ class ApiTests {
     }
 
     @Test
+    @Story("Validity check user avatar and email")
     void avatarAndEmail() throws IOException {
         Response<UsersDataList> response = apiService.getUsersList().execute();
 
@@ -47,6 +52,7 @@ class ApiTests {
 
 
     @Test
+    @Story("Testing user creation")
     void createUser() throws IOException {
         CreatedUser createdUser = new CreatedUser("morpheus", "leader");
         Call<CreatedUserResponse> call = apiService.createUser(createdUser);
@@ -60,6 +66,7 @@ class ApiTests {
     }
 
     @Test
+    @Story("Testing user data update")
     void updateUser() throws IOException {
         CreatedUser createdUser = new CreatedUser("morpheus", "zion resident");
         Call<CreatedUserResponse> call = apiService.updateUser(createdUser);
@@ -72,6 +79,7 @@ class ApiTests {
     }
 
     @Test
+    @Story("User deletion check")
     void deleteUser() throws IOException {
         Response<UserData> response = apiService.deleteUser().execute();
 
@@ -79,6 +87,7 @@ class ApiTests {
     }
 
     @Test
+    @Story("Testing for missing user data")
     void notFoundUser() throws IOException {
         var call = apiService.getNotFoundUser();
         var response = call.execute();
@@ -87,6 +96,7 @@ class ApiTests {
     }
 
     @Test
+    @Story("Data sort check")
     void unknownDataSortedByYear() throws IOException {
         Response<UnknownDataList> response = apiService.getUnknownList().execute();
 
@@ -106,6 +116,7 @@ class ApiTests {
     @Tag("Login")
     class LoginTest {
         @Test
+        @Story("Success login")
         void successLogin() throws IOException {
             String token = "QpwL5tke4Pnpja7X4";
             LoginData loginData = new LoginData("eve.holt@reqres.in", "cityslicka");
@@ -121,6 +132,7 @@ class ApiTests {
         }
 
         @Test
+        @Story("Failed login")
         void failedLogin() throws IOException {
             LoginData loginData = new LoginData("peter@klaven", "");
             Call<LoginResponse> call = apiService.loginUser(loginData);
@@ -136,9 +148,10 @@ class ApiTests {
 
     @Nested
     @DisplayName("Test user registration")
-    @Tag("Login")
+    @Tag("Registration")
     class RegistrationTest {
         @Test
+        @Story("Success registration")
         void successRegistration() throws IOException {
             Integer id = 4;
             String token = "QpwL5tke4Pnpja7X4";
@@ -157,6 +170,7 @@ class ApiTests {
         }
 
         @Test
+        @Story("Failed registration")
         void failedRegistration() throws IOException {
             LoginData loginData = new LoginData("sydney@fifse", "");
             Call<LoginResponse> call = apiService.registerUser(loginData);
